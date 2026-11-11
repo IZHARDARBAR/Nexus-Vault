@@ -1,0 +1,16 @@
+{
+  "short_name": "Nexus Vault",
+  "name": "Nexus Vault - Neural Second Brain",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#070709",
+  "theme_color": "#06b6d4",
+  "display": "standalone",
+  "orientation": "portrait"
+}

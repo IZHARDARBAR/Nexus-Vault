@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { CommandPalette } from '../shared/CommandPalette';
+import { InstallPrompt } from '../shared/InstallPrompt';
 import { Login } from '../../pages/Auth/Login';
 import { useVaultStore } from '../../stores/useVaultStore';
 import { subscribeToAuth } from '../../firebase/auth';
@@ -68,13 +69,14 @@ export const AppLayout = () => {
         />
       )}
 
-      {/* Global Command Palette */}
+      {/* Global Utilities */}
       <CommandPalette isOpen={isPaletteOpen} onClose={() => setIsPaletteOpen(false)} />
+      
+      {/* 👉 PWA INSTALL / GET APP BANNER */}
+      <InstallPrompt />
 
-      {/* Main Sidebar */}
       <Sidebar />
 
-      {/* App Main Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10">
         <Header onOpenPalette={() => setIsPaletteOpen(true)} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-7">
