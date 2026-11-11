@@ -35,7 +35,7 @@ export const InstallPrompt = () => {
       setDeferredPrompt(null);
     } else {
       // Direct Chrome Android fallback
-      alert('Chrome browser ke top-right par 3 dots (⋮) dabayein aur "Install app" par click karein!');
+      alert("Click the three dots (⋮) in the top-right corner of the Chrome browser, then select Install app!");
     }
   };
 
