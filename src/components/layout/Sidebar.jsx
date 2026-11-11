@@ -10,7 +10,6 @@ import {
   Calendar,
   Settings,
   Cpu,
-  Radio,
   PanelLeftClose,
   ShieldAlert,
   LogOut,
@@ -39,6 +38,7 @@ export const Sidebar = () => {
 
   const handleConfirmLogout = async () => {
     setShowLogoutModal(false);
+    if (window.innerWidth < 1024) closeSidebar();
     await logoutUser();
   };
 
@@ -52,7 +52,7 @@ export const Sidebar = () => {
         }`}
       >
         {/* Brand Header */}
-        <div className="h-16 flex items-center justify-between px-5 border-b border-zinc-800/60 bg-gradient-to-r from-zinc-950 via-zinc-900/50 to-transparent">
+        <div className="h-16 flex items-center justify-between px-5 border-b border-zinc-800/60 bg-gradient-to-r from-zinc-950 via-zinc-900/50 to-transparent shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-[0_0_15px_rgba(6,182,212,0.4)]">
               <Cpu className="w-4 h-4 animate-pulse" />
@@ -74,7 +74,7 @@ export const Sidebar = () => {
           </button>
         </div>
 
-        {/* Nav List */}
+        {/* Navigation List */}
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto pointer-events-auto">
           {navigation.map((item) => {
             const Icon = item.icon;
@@ -89,7 +89,7 @@ export const Sidebar = () => {
                   `group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-200 relative ${
                     isActive
                       ? 'bg-gradient-to-r from-cyan-500/15 via-indigo-500/10 to-transparent text-cyan-300 border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)] font-semibold'
-                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/40 border border-transparent'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/40 border border-transparent'
                   }`
                 }
               >
@@ -108,7 +108,7 @@ export const Sidebar = () => {
 
           {/* Super Admin Tab */}
           {hasAdminAccess && (
-            <div className="pt-4 mt-2 border-t border-zinc-900">
+            <div className="pt-2">
               <NavLink
                 to="/admin"
                 onClick={() => {
@@ -132,39 +132,44 @@ export const Sidebar = () => {
               </NavLink>
             </div>
           )}
-        </nav>
 
-        {/* 👉 FOOTER: USER INFO + PROMINENT LOGOUT BUTTON (PERFECT FOR MOBILE) */}
-        <div className="p-4 border-t border-zinc-800/60 bg-zinc-950/60 pointer-events-auto">
-          <div className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-zinc-900/40 border border-zinc-800/80">
-            <div className="flex items-center gap-2.5 truncate">
-              {user?.photoURL ? (
-                <img src={user.photoURL} alt="Avatar" className="w-7 h-7 rounded-full shrink-0 border border-cyan-500/40" />
-              ) : (
-                <div className="w-7 h-7 rounded-lg bg-cyan-950 border border-cyan-500 text-cyan-300 flex items-center justify-center text-xs font-bold shrink-0">
-                  {user?.email?.slice(0, 2).toUpperCase() || 'NV'}
-                </div>
-              )}
-              <div className="truncate">
-                <p className="text-[10px] font-mono font-semibold text-zinc-200 truncate">
-                  {user ? user.displayName || user.email : 'GUEST OPERATOR'}
-                </p>
-                <p className="text-[8px] text-zinc-500 font-mono">
-                  {hasAdminAccess ? 'SUPER ADMIN' : 'CONNECTED'}
-                </p>
-              </div>
-            </div>
-
-            {/* Mobile / Sidebar Logout Button */}
-            {user && (
+          {/* 👉 BIG UNMISSABLE LOGOUT BUTTON INSIDE MENU (PERFECT FOR MOBILE) */}
+          {user && (
+            <div className="pt-4 mt-2 border-t border-zinc-900">
               <button
                 onClick={() => setShowLogoutModal(true)}
-                className="p-1.5 hover:bg-rose-950/60 text-zinc-500 hover:text-rose-400 border border-zinc-800/80 hover:border-rose-500/40 rounded-lg transition shrink-0"
-                title="Logout Session"
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-mono text-rose-400/80 hover:text-rose-300 hover:bg-rose-950/30 border border-zinc-900 hover:border-rose-500/30 transition"
               >
-                <LogOut className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-3">
+                  <LogOut className="w-4 h-4 text-rose-400" />
+                  <span>Disconnect Vault</span>
+                </div>
+                <span className="text-[10px] bg-rose-950/60 text-rose-400 px-1.5 py-0.5 rounded border border-rose-500/30">
+                  EXIT
+                </span>
               </button>
+            </div>
+          )}
+        </nav>
+
+        {/* Footer Identity */}
+        <div className="p-4 border-t border-zinc-800/60 bg-zinc-950/60 pointer-events-auto shrink-0">
+          <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-zinc-900/40 border border-zinc-800/80">
+            {user?.photoURL ? (
+              <img src={user.photoURL} alt="Avatar" className="w-7 h-7 rounded-full shrink-0 border border-cyan-500/40" />
+            ) : (
+              <div className="w-7 h-7 rounded-lg bg-cyan-950 border border-cyan-500 text-cyan-300 flex items-center justify-center text-xs font-bold shrink-0">
+                {user?.email?.slice(0, 2).toUpperCase() || 'NV'}
+              </div>
             )}
+            <div className="truncate">
+              <p className="text-[10px] font-mono font-semibold text-zinc-200 truncate">
+                {user ? user.displayName || user.email : 'GUEST OPERATOR'}
+              </p>
+              <p className="text-[8px] text-zinc-500 font-mono">
+                {hasAdminAccess ? 'SUPER ADMIN' : 'CONNECTED'}
+              </p>
+            </div>
           </div>
         </div>
       </aside>
