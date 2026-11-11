@@ -7,15 +7,15 @@ export const InstallPrompt = () => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    // Check if already installed
+    // Check if already running in standalone app
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setIsVisible(false);
       return;
     }
 
-    // Capture Android Chrome Native Install Event
     const handleBeforeInstall = (e) => {
       e.preventDefault();
+      console.log('✅ Android PWA Install Event Captured!');
       setDeferredPrompt(e);
       setIsVisible(true);
     };
@@ -24,15 +24,18 @@ export const InstallPrompt = () => {
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
   }, []);
 
-  // Direct Android 1-Click Install Trigger
   const handleInstallClick = async () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
+      console.log('User response to install:', outcome);
       if (outcome === 'accepted') {
         setIsVisible(false);
       }
       setDeferredPrompt(null);
+    } else {
+      // Direct Chrome Android fallback
+      alert('Chrome browser ke top-right par 3 dots (⋮) dabayein aur "Install app" par click karein!');
     }
   };
 
@@ -52,7 +55,7 @@ export const InstallPrompt = () => {
           </h4>
         </div>
 
-        {/* 1-Click Direct Install Button */}
+        {/* Action Buttons */}
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={handleInstallClick}

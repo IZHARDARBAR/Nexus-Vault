@@ -1,12 +1,19 @@
 // public/sw.js
-self.addEventListener('install', (e) => {
+const CACHE_NAME = 'nexus-vault-v1';
+
+self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', (e) => {
-  e.waitUntil(clients.claim());
+self.addEventListener('activate', (event) => {
+  event.waitUntil(clients.claim());
 });
 
-self.addEventListener('fetch', (e) => {
-  // Let the browser handle standard requests
+// Required fetch listener for Chrome PWA install trigger
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      return caches.match(event.request);
+    })
+  );
 });
