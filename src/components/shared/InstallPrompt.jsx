@@ -3,20 +3,24 @@ import React, { useState, useEffect } from 'react';
 import { Download, X, Cpu } from 'lucide-react';
 
 export const InstallPrompt = () => {
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [promptReady, setPromptReady] = useState(Boolean(window.deferredPrompt));
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    // Check if already running in standalone app
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setIsVisible(false);
       return;
     }
 
+    // Check if globally captured already
+    if (window.deferredPrompt) {
+      setPromptReady(true);
+    }
+
     const handleBeforeInstall = (e) => {
       e.preventDefault();
-      console.log('✅ Android PWA Install Event Captured!');
-      setDeferredPrompt(e);
+      window.deferredPrompt = e;
+      setPromptReady(true);
       setIsVisible(true);
     };
 
@@ -24,18 +28,17 @@ export const InstallPrompt = () => {
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
   }, []);
 
+  // 👉 DIRECT ANDROID 1-CLICK INSTALL (ZERO ALERTS)
   const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log('User response to install:', outcome);
+    const promptEvent = window.deferredPrompt;
+    if (promptEvent) {
+      promptEvent.prompt();
+      const { outcome } = await promptEvent.userChoice;
       if (outcome === 'accepted') {
         setIsVisible(false);
       }
-      setDeferredPrompt(null);
-    } else {
-      // Direct Chrome Android fallback
-      alert("Click the three dots (⋮) in the top-right corner of the Chrome browser, then select Install app!");
+      window.deferredPrompt = null;
+      setPromptReady(false);
     }
   };
 
@@ -45,7 +48,6 @@ export const InstallPrompt = () => {
     <div className="fixed bottom-4 left-3 right-3 sm:left-auto sm:right-6 sm:w-96 z-[9999] animate-in fade-in slide-in-from-bottom duration-300">
       <div className="bg-[#0c0d14] border-2 border-cyan-400 rounded-2xl p-3.5 sm:p-4 shadow-[0_0_40px_rgba(6,182,212,0.5)] backdrop-blur-2xl flex items-center justify-between gap-3">
         
-        {/* App Title */}
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-violet-500 flex items-center justify-center text-white shrink-0 shadow-lg shadow-cyan-500/40">
             <Cpu className="w-5 h-5 animate-pulse" />
@@ -55,7 +57,6 @@ export const InstallPrompt = () => {
           </h4>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={handleInstallClick}
@@ -76,4 +77,4 @@ export const InstallPrompt = () => {
       </div>
     </div>
   );
-};
+}; 

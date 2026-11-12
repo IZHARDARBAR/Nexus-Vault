@@ -1,29 +1,59 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    
-    <!-- 👉 Nexus Vault Custom App Favicon -->
+
+    <!-- App Branded Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
 
+    <!-- Responsive Viewport -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
+
+    <!-- App Title -->
     <title>Nexus Vault - Neural Second Brain</title>
 
-    <!-- PWA Web App Manifest & Mobile Meta -->
+    <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
+
+    <!-- Mobile Theme -->
     <meta name="theme-color" content="#06b6d4" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Nexus Vault" />
 
-    <!-- Google Inter Font -->
+    <!-- Apple Mobile App Settings -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta
+      name="apple-mobile-web-app-title"
+      content="Nexus Vault"
+    />
+
+    <!-- Global PWA Install Event Catcher -->
+    <script>
+      window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+
+        window.deferredPrompt = event;
+
+        console.log("PWA Install Event Captured Successfully!");
+      });
+    </script>
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+
     <link
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
@@ -31,26 +61,34 @@
   </head>
 
   <body class="bg-[#070709] text-zinc-100 overflow-hidden">
-    <!-- React App Mount Point -->
+
+    <!-- React Root Container -->
     <div id="root"></div>
 
-    <!-- Vite React Main Entry Script -->
+    <!-- Vite Entry Point -->
     <script type="module" src="/src/main.jsx"></script>
 
-    <!-- Service Worker Registration for PWA & Offline Support -->
+    <!-- Service Worker Registration -->
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register('/sw.js')
+            .register("/sw.js")
             .then((registration) => {
-              console.log('✅ Nexus PWA Service Worker Registered Successfully:', registration.scope);
+              console.log(
+                "Service Worker Registered:",
+                registration.scope
+              );
             })
             .catch((error) => {
-              console.warn('⚠️ Service Worker Registration Failed:', error);
+              console.warn(
+                "Service Worker Registration Failed:",
+                error
+              );
             });
         });
       }
     </script>
+
   </body>
 </html>
